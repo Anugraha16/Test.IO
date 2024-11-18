@@ -25,13 +25,14 @@ export const signup=async(req,res)=>{
     let profilepic=''
     //Avatar generator
     profilepic=`https://api.dicebear.com/9.x/initials/svg?seed=${userName}`;
+    
 
     const newUser=new User({
         userName,
         email,
         password:hashPassword,
         role,
-        profilepic,
+        profile:profilepic,
     });
     generatetoken(newUser._id,res);  //generate jwt token
     await newUser.save();
