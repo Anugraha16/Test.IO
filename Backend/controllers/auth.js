@@ -30,7 +30,7 @@ export const signup=async(req,res)=>{
     const newUser=new User({
         userName,
         email,
-        password:hashPassword,
+        hashPassword,
         role,
         profile:profilepic,
     });
