@@ -6,8 +6,11 @@ const userSchema= new Schema({
     password: { type: String, required: true },
     role: { type: String, enum: ['Student', 'Staff', 'Admin'], required: true },
     profile:{type:String,default:""}
-})
+}, {
+    timestamps: true
+  });
 
 const user=mongoose.model("user",userSchema);
+
 
 export default user;
