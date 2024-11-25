@@ -1,7 +1,12 @@
 import bcrypt from "bcryptjs";
 
 import User from "../models/user.js";
-import generatetoken from "../utils/token.js";
+import Student from "../models/student.js";
+import Staff from "../models/staff.js";
+import Admin from "../models/admin.js";
+
+
+import {generatetoken} from "../utils/token.js";
 
 
 export const signup=async(req,res)=>{
@@ -30,11 +35,26 @@ export const signup=async(req,res)=>{
     const newUser=new User({
         userName,
         email,
-        hashPassword,
+        password:hashPassword,
         role,
         profile:profilepic,
     });
-    generatetoken(newUser._id,res);  //generate jwt token
+    
+    switch (role) {
+        case 'Student':
+            await Student.create({ userId: newUser._id, name:'', DOB:'', gender:'' ,phoneNo:'', students:[], organization:'' });
+            break;
+        case 'Staff':
+            await Staff.create({ userId: newUser._id,name:'', DOB:'', gender:'' ,phoneNo:'', students:[], courses:[]});
+            break;
+        case 'Admin':
+            await Admin.create({ userId: newUser._id, name:'', DOB:'', gender:'' ,phoneNo:'' ,accessLevel: 'Basic' });
+            break;
+        default:
+            return res.status(400).json({ error: 'Invalid role specified' });
+    }
+
+    generatetoken(newUser._id,role,res);  //generate jwt token
     await newUser.save();
     res.status(200).json({message:'User created successfully'});
 }
@@ -53,7 +73,7 @@ export const login=async(req,res)=>{
         if(!user || !verifyPassword){
             return res.status(400).json({error:"Invalid username or password"});
         }
-        generatetoken(user._id,res);
+        generatetoken(user._id,user.role,res);
         res.status(200).json({message:"Login successfull"});
     }   
 

@@ -6,4 +6,6 @@ const organizationSchema = new mongoose.Schema({
   contactEmail: { type: String },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Organization', organizationSchema);
+const Organization = mongoose.model('Organization', organizationSchema);
+
+export default Organization; 

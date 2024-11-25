@@ -207,6 +207,8 @@ def execute_cpp_code(code):
 def handler(event, context):
     language = event.get('language', 'python')
     code = event.get('code', '')
+    origin = event.get('headers', {}).get('Origin', '*')  # Get the Origin header from the request
+
     if language == 'python':
         result = execute_python_code(code)
     elif language == 'java':
@@ -224,5 +226,11 @@ def handler(event, context):
 
     return {
         'StatusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': origin,  
+            'Access-Control-Allow-Headers': 'Content-Type', 
+            'Access-Control-Allow-Methods': 'POST',  
+            'Access-Control-Expose-Headers': 'X-Custom-Header',  
+        },
         'body': result
     }
