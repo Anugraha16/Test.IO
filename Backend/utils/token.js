@@ -13,7 +13,7 @@ res.cookie("jwt",token,{
     maxAge:15*24*60*60*1000, //ms(milliseconds)
     httponly:true, //XSS attack prevention
     samesite:"strict",  //CORS forgery attack
-    secure: process.env.NODE_ENV !== "development",
+    secure: process.env.NODE_ENV === "development",
 })
     return token
 }
