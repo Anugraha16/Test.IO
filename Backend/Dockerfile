@@ -17,9 +17,11 @@ RUN yum update -y && \
     # Install Node.js
     curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - && \
     yum install -y nodejs && \
+    npm install -g readline-sync\
     # Clean up temporary files and yum cache to reduce image size
     yum clean all && \
     rm -rf /var/cache/yum /tmp/*
+
 
 # Copy Python dependencies file (requirements.txt) and install Python dependencies
 COPY requirements.txt ${LAMBDA_TASK_ROOT}/
