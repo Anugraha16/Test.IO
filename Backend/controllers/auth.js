@@ -54,7 +54,7 @@ export const signup=async(req,res)=>{
             return res.status(400).json({ error: 'Invalid role specified' });
     }
 
-    generatetoken(newUser._id,role,res);  //generate jwt token
+    // generatetoken(newUser._id,role,res);  //generate jwt token
     await newUser.save();
     res.status(200).json({message:'User created successfully'});
 }

@@ -224,7 +224,7 @@ def handler(event, context):
             'StatusCode': 400,
             'headers': {
                 'Access-Control-Allow-Origin': origin,
-                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Headers': ' ',
                 'Access-Control-Allow-Methods': 'POST',
                 'Access-Control-Expose-Headers': 'X-Custom-Header',
             },

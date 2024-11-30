@@ -3,12 +3,6 @@ import mongoose from "mongoose";
 const assessmentSchema = new mongoose.Schema(
   {
     testId: { type: String, required: true, unique: true },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Staff",
-      required: true,
-    }, // Reference to Staff model
-    testType: { type: String, enum: ["mcq", "programming"], required: true }, // Type of test
     questions: [
       {
         type: {
@@ -17,7 +11,12 @@ const assessmentSchema = new mongoose.Schema(
           required: true,
         }, // Question type
         marks: { type: Number, required: true }, // Marks for the question
-        questionText: { type: String, required: true }, // Common question field
+        questionText: { 
+          type: String,
+          required: function () {
+            return this.type === "mcq"; // Required only for MCQ
+          },
+        }, // Question text only for MCQ
         // MCQ-specific fields
         options: [
           {
@@ -48,18 +47,21 @@ const assessmentSchema = new mongoose.Schema(
         },
       },
     ],
-  allowedStudents: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student", 
-    },
-  ],
-  duration: { type: Number, required: true }, 
-},
-{ timestamps: true }
+    allowedStudents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student", 
+      },
+    ],
+    duration: { type: Number, required: true },
+    startDate: { type: Date, required: true }, 
+    endDate: { type: Date, required: true }, 
+    startTime: { type: String, required: true }, 
+    endTime: { type: String, required: true },
+  },
+  { timestamps: true }
 );
 
-
-const Assessment=mongoose.model("Assessment",assessmentSchema);
+const Assessment = mongoose.model("Assessment", assessmentSchema);
 
 export default Assessment;
