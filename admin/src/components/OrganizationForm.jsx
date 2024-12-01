@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Building } from 'lucide-react';
+import axios from 'axios';
 
 export default function OrganizationForm({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -7,10 +8,24 @@ export default function OrganizationForm({ onSubmit }) {
     description: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData({ name: '', descriptiQon: '' });
+    
+    try {
+      // API request to add the organization
+      const response = await axios.post('http://localhost:5000/adminAccess/create-org', formData);
+      
+      // Once the form is submitted, trigger any additional actions or callbacks (e.g., notifying the parent component)
+      if (onSubmit) {
+        onSubmit(response.data);  // Optionally, pass back the response to the parent component
+      }
+      
+      // Reset form data after submission
+      setFormData({ name: '', description: '' });
+    } catch (error) {
+      console.error("There was an error submitting the form:", error);
+      // Handle error (you can show a message or log it for debugging)
+    }
   };
 
   return (

@@ -54,3 +54,27 @@ export const createOrganization = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+
+//get organization
+export const getOrganization=async (req, res) => {
+  try {
+    const organizations = await Organization.find({}, 'name'); 
+    res.status(200).json(organizations);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching organizations.' });
+  }
+}
+
+
+//get course 
+export const getCourse=async (req, res) => {
+  try {
+    const course = await Course.find({}, 'courseName'); 
+    res.status(200).json(course);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching organizations.' });
+  }
+}

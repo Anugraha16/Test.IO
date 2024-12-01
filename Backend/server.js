@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
-
 import authRoute from "./routes/auth.js";
 import connectDB from "./database/db.js";
 import assesmentRoute from "./routes/assesment.js"
@@ -13,7 +12,7 @@ const PORT = process.env.PORT;
 
 const app=express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(cookieParser());
 
 
@@ -23,7 +22,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/auth",authRoute);
-app.use("/assessments",assesmentRoute);
+app.use("/assesments",assesmentRoute);
 app.use('/adminAccess',adminAccess);
 
 

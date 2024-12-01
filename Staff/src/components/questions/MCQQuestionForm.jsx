@@ -1,35 +1,90 @@
 import React from 'react';
+import { MinusCircle, PlusCircle } from 'lucide-react';
 
-const MCQQuestionForm = ({ question, onQuestionChange, onOptionChange }) => {
+const MCQQuestionForm = ({ question, index, onChange }) => {
+  const addOption = () => {
+    const newOption = {
+      id: Date.now().toString(),
+      optionText: '',
+      isCorrect: false
+    };
+    onChange(index, {
+      ...question,
+      options: [...(question.options || []), newOption]
+    });
+  };
+
+  const removeOption = (optionIndex) => {
+    const newOptions = [...(question.options || [])];
+    newOptions.splice(optionIndex, 1);
+    onChange(index, { ...question, options: newOptions });
+  };
+
+  const updateOption = (optionIndex, field, value) => {
+    const newOptions = [...(question.options || [])];
+    newOptions[optionIndex] = { ...newOptions[optionIndex], [field]: value };
+    onChange(index, { ...question, options: newOptions });
+  };
+
   return (
     <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Question</label>
-        <textarea
-          className="w-full p-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-          rows={3}
-          value={question.question}
-          onChange={(e) => onQuestionChange(question.id, 'question', e.target.value)}
-          placeholder="Enter your question..."
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Question Text</label>
+          <input
+            type="text"
+            value={question.questionText}
+            onChange={(e) => onChange(index, { ...question, questionText: e.target.value })}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            placeholder="Enter question text"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Marks</label>
+          <input
+            type="number"
+            value={question.marks}
+            onChange={(e) => onChange(index, { ...question, marks: Number(e.target.value) })}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            min="0"
+          />
+        </div>
       </div>
-      <div className="space-y-4">
-        <label className="block text-sm font-medium text-gray-700">Options</label>
-        {question.options.map((option, index) => (
-          <div key={option.id} className="flex items-center gap-4">
-            <input
-              type="radio"
-              checked={option.isCorrect}
-              onChange={() => onOptionChange(question.id, option.id, 'isCorrect', true)}
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-            />
+
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <label className="block text-sm font-medium text-gray-700">Options</label>
+          <button
+            type="button"
+            onClick={addOption}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <PlusCircle className="w-5 h-5" />
+          </button>
+        </div>
+        
+        {question.options?.map((option, optionIndex) => (
+          <div key={option.id} className="flex items-center gap-2">
             <input
               type="text"
-              value={option.text}
-              onChange={(e) => onOptionChange(question.id, option.id, 'text', e.target.value)}
-              placeholder={`Option ${index + 1}`}
-              className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              value={option.optionText}
+              onChange={(e) => updateOption(optionIndex, 'optionText', e.target.value)}
+              className="flex-1 rounded-md border-gray-300 shadow-sm"
+              placeholder={`Option ${optionIndex + 1}`}
             />
+            <input
+              type="checkbox"
+              checked={option.isCorrect}
+              onChange={(e) => updateOption(optionIndex, 'isCorrect', e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            <button
+              type="button"
+              onClick={() => removeOption(optionIndex)}
+              className="text-red-500 hover:text-red-700"
+            >
+              <MinusCircle className="w-5 h-5" />
+            </button>
           </div>
         ))}
       </div>
